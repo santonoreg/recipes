@@ -15,7 +15,7 @@ $isAdminPage = str_starts_with($template ?? '', 'admin/');
     <?php if ($isAdminPage): ?><meta name="robots" content="noindex"><?php endif; ?>
     <link rel="stylesheet" href="<?= e(asset('css/app.css')) ?>">
 </head>
-<body data-base="<?= e(url('')) ?>"<?= $isAdmin ? ' data-csrf="' . e(App\Auth::csrf()) . '"' : '' ?>>
+<body data-base="<?= e(App\App::base() . '/') ?>"<?= $isAdmin ? ' data-csrf="' . e(App\Auth::csrf()) . '"' : '' ?>>
 <header class="site-header">
     <div class="wrap">
         <a class="brand" href="<?= e(url('')) ?>"><span class="brand-mark" aria-hidden="true"></span><?= e($site) ?></a>

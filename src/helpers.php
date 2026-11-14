@@ -12,13 +12,14 @@ function e(mixed $value): string
 /** URL μέσα στην εφαρμογή, ανεξάρτητα από τον υποφάκελο όπου είναι στημένη. */
 function url(string $path = '/'): string
 {
-    return App::base() . '/' . ltrim($path, '/');
+    $path = ltrim($path, '/');
+    return $path === '' ? App::home() . '/' : App::base() . '/' . $path;
 }
 
 function asset(string $path): string
 {
     $file = dirname(__DIR__) . '/public/assets/' . $path;
-    return url('assets/' . $path) . (is_file($file) ? '?v=' . filemtime($file) : '');
+    return App::assetBase() . '/assets/' . $path . (is_file($file) ? '?v=' . filemtime($file) : '');
 }
 
 function csrf_field(): string

@@ -55,6 +55,11 @@ php -S localhost:8765 -t public public/index.php
 δουλεύει είτε το vhost δείχνει στον ριζικό φάκελο είτε στο `public/`, και σε υποφάκελο (π.χ. `localhost/recipes`).
 Θέλει ενεργό `mod_rewrite`.
 
+**Server χωρίς `.htaccess` / `mod_rewrite`:** δεν χρειάζεται καμία ρύθμιση στον web server. Το ριζικό `index.php`
+αναλαμβάνει την αρχική (π.χ. `example.gr/recipes/`) και οι υπόλοιπες σελίδες παίρνουν τη μορφή
+`example.gr/recipes/index.php/recipe/3`. Επειδή τότε ο φάκελος της εφαρμογής σερβίρεται ολόκληρος, όρισε στο `.env`
+`DATA_DIR` (και προαιρετικά `OUTPUT_DIR`) σε διαδρομή έξω από τον φάκελο του web.
+
 **nginx:** όρισε `root` το `public/` και `try_files $uri /index.php$is_args$args;`.
 
 Οι φάκελοι `data/` και `output/` πρέπει να είναι εγγράψιμοι από τον web server.

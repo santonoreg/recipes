@@ -8,21 +8,48 @@ final class App
 {
     private static string $base = '';
 
+    private static string $home = '';
+    private static string $assets = '';
+
+    /** Πρόθεμα για τις διαδρομές της εφαρμογής (χωρίς rewrite περιλαμβάνει το /index.php). */
     public static function base(): string
     {
         return self::$base;
     }
 
+    /** Ο φάκελος της αρχικής σελίδας. */
+    public static function home(): string
+    {
+        return self::$home;
+    }
+
+    /** Ο φάκελος όπου σερβίρονται τα στατικά αρχεία (assets). */
+    public static function assetBase(): string
+    {
+        return self::$assets;
+    }
+
     public static function run(): void
     {
         $uri = rawurldecode((string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH));
-        // δουλεύει και σε υποφάκελο (π.χ. /recipes/) και όταν ο ριζικός φάκελος προωθεί στο public/
-        $base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/')), '/');
-        if ($base !== '' && !str_starts_with($uri, $base . '/') && $uri !== $base) {
-            $base = (string) preg_replace('~/public$~', '', $base);
+        $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? '/index.php'));
+        $dir = rtrim(str_replace('\\', '/', dirname($script)), '/');
+        $rootFront = defined('APP_ROOT_FRONT');
+        if ($rootFront || $uri === $script || str_starts_with($uri, $script . '/')) {
+            // χωρίς rewrite: οι διαδρομές πάνε μετά το index.php (π.χ. /recipes/index.php/recipe/3)
+            self::$base = $script;
+            self::$home = $dir;
+            self::$assets = $rootFront ? $dir . '/public' : $dir;
+            $path = str_starts_with($uri, $script) ? substr($uri, strlen($script)) : '';
+        } else {
+            // με rewrite: δουλεύει και σε υποφάκελο και όταν ο ριζικός φάκελος προωθεί στο public/
+            if ($dir !== '' && !str_starts_with($uri, $dir . '/') && $uri !== $dir) {
+                $dir = (string) preg_replace('~/public$~', '', $dir);
+            }
+            self::$base = self::$home = self::$assets = $dir;
+            $path = substr($uri, strlen($dir));
         }
-        self::$base = $base;
-        $path = '/' . trim(substr($uri, strlen($base)), '/');
+        $path = '/' . trim($path, '/');
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
         header('X-Content-Type-Options: nosniff');
