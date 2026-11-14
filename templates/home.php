@@ -29,7 +29,8 @@
                     $names[] = $item['name'];
                 }
             }
-            $meta = recipe_meta($r);
+            $time = trim((string) ($r['total_time'] ?? '')) ?: trim((string) ($r['cook_time'] ?? ''));
+            $servings = trim((string) ($r['servings'] ?? ''));
             ?>
             <li class="card" data-search="<?= e(mb_strtolower($row['title'] . ' ' . implode(' ', $names))) ?>">
                 <a href="<?= e(url('recipe/' . $row['id'])) ?>">
@@ -37,14 +38,21 @@
                         <?php if ($row['poster_file'] !== ''): ?>
                             <img src="<?= e(url("media/{$row['id']}/poster")) ?>" alt="" loading="lazy">
                         <?php endif; ?>
-                        <?php if ($row['video_file'] !== ''): ?><span class="play" aria-hidden="true"></span><?php endif; ?>
+                        <?php if ($row['uploader'] !== ''): ?><span class="chip-over"><?= e($row['uploader']) ?></span><?php endif; ?>
+                        <?php if ($row['video_file'] !== ''): ?><span class="play-over"><?= icon('play') ?></span><?php endif; ?>
                     </div>
                     <div class="card-body">
+                        <p class="card-kicker">
+                            <span><?= count($names) ?> υλικά</span><span class="dot">·</span><span><?= count($r['steps'] ?? []) ?> βήματα</span>
+                        </p>
                         <h2><?= e($row['title']) ?></h2>
-                        <?php if ($row['description'] !== ''): ?><p><?= e($row['description']) ?></p><?php endif; ?>
-                        <?php if ($meta): ?>
-                            <p class="card-meta"><?= e(implode(' · ', array_map(fn ($m) => "$m[0]: $m[1]", array_slice($meta, 0, 2)))) ?></p>
-                        <?php endif; ?>
+                        <?php if ($row['description'] !== ''): ?><p class="card-desc"><?= e($row['description']) ?></p><?php endif; ?>
+                        <p class="card-foot">
+                            <?php if ($time !== ''): ?><span><?= icon('clock') ?><?= e($time) ?></span><?php endif; ?>
+                            <?php if ($servings !== ''): ?><span><?= icon('users') ?><?= e($servings) ?></span><?php endif; ?>
+                            <?php if ($time === '' && $servings === ''): ?><span><?= icon('clock') ?><?= e(greek_date((string) $row['created_at'])) ?></span><?php endif; ?>
+                            <?php if ($row['video_file'] !== ''): ?><span class="card-video"><?= icon('play') ?>Βίντεο</span><?php endif; ?>
+                        </p>
                     </div>
                 </a>
             </li>

@@ -1,4 +1,4 @@
-// Συνταγές — δημόσιες σελίδες: αναζήτηση, εκτύπωση, επιβεβαίωση αφαίρεσης, διάταξη βίντεο
+// Συνταγές — δημόσιες σελίδες: αναζήτηση, εκτύπωση, επιβεβαίωση αφαίρεσης
 (() => {
     'use strict';
 
@@ -30,13 +30,4 @@
             if (!window.confirm(f.dataset.confirm)) ev.preventDefault();
         });
     });
-
-    // Οριζόντιο βίντεο: πάνω από το κείμενο αντί για στενή στήλη στο πλάι
-    const video = document.querySelector('.recipe-video video');
-    if (video) {
-        const check = () => {
-            if (video.videoWidth > video.videoHeight) video.closest('.recipe').classList.add('landscape');
-        };
-        video.readyState >= 1 ? check() : video.addEventListener('loadedmetadata', check, { once: true });
-    }
 })();

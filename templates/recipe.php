@@ -4,113 +4,133 @@
 /** @var bool $isAdmin */
 $groups = ingredient_groups($recipe);
 $showTitles = count($groups) > 1;
-$meta = recipe_meta($recipe);
+$steps = $recipe['steps'] ?? [];
 $hasVideo = $row['video_file'] !== '';
 $poster = $row['poster_file'] !== '' ? url("media/{$row['id']}/poster") : '';
+$sourceName = $row['uploader'] !== '' ? $row['uploader'] : 'αρχικό post';
+
+$stats = [];
+foreach ([['Προετοιμασία', 'prep_time', 'clock'], ['Μαγείρεμα', 'cook_time', 'flame'], ['Συνολικά', 'total_time', 'timer'], ['Μερίδες', 'servings', 'users']] as [$label, $key, $ico]) {
+    $value = trim((string) ($recipe[$key] ?? ''));
+    if ($value !== '') {
+        $stats[] = [$label, $value, $ico];
+    }
+}
+$stats[] = ['Υλικά', (string) ingredient_count($recipe), 'basket'];
+$stats[] = ['Βήματα', (string) count($steps), 'list'];
 ?>
-<article class="recipe<?= $hasVideo ? ' has-video' : '' ?>">
-    <header class="recipe-head">
-        <p class="kicker">Συνταγή</p>
-        <h1><?= e($row['title']) ?></h1>
-        <?php if ($row['description'] !== ''): ?><p class="lead"><?= e($row['description']) ?></p><?php endif; ?>
-
-        <?php if ($meta): ?>
-            <dl class="meta">
-                <?php foreach ($meta as [$k, $v]): ?>
-                    <div><dt><?= e($k) ?></dt><dd><?= e($v) ?></dd></div>
-                <?php endforeach; ?>
-            </dl>
-        <?php endif; ?>
-
-        <div class="actions no-print">
-            <a class="btn primary" href="<?= e(url("recipe/{$row['id']}/pdf")) ?>">Κατέβασμα PDF</a>
-            <button type="button" class="btn" data-print>Εκτύπωση</button>
-            <?php if ($isAdmin): ?>
-                <form method="post" action="<?= e(url("admin/recipes/{$row['id']}/delete")) ?>"
-                      data-confirm="Να αφαιρεθεί οριστικά η συνταγή «<?= e($row['title']) ?>» μαζί με το βίντεό της;">
-                    <?= csrf_field() ?>
-                    <button type="submit" class="btn danger">Αφαίρεση</button>
-                </form>
-            <?php endif; ?>
+<article class="recipe">
+    <header class="recipe-hero<?= $poster !== '' ? ' has-img' : '' ?>">
+        <?php if ($poster !== ''): ?><img class="no-print" src="<?= e($poster) ?>" alt=""><?php endif; ?>
+        <div class="recipe-hero-text">
+            <p class="kicker">Συνταγή</p>
+            <h1><?= e($row['title']) ?></h1>
+            <?php if ($row['description'] !== ''): ?><p class="lead"><?= e($row['description']) ?></p><?php endif; ?>
         </div>
     </header>
 
-    <div class="recipe-body">
-        <?php if ($hasVideo): ?>
-            <aside class="recipe-video no-print">
-                <video controls preload="metadata" playsinline
-                       <?= $poster !== '' ? 'poster="' . e($poster) . '"' : '' ?>
-                       src="<?= e(url("media/{$row['id']}/video")) ?>"></video>
-                <?php if ($row['source_url'] !== ''): ?>
-                    <p class="source">
-                        Πηγή:
-                        <a href="<?= e($row['source_url']) ?>" target="_blank" rel="noopener noreferrer"><?= e($row['uploader'] !== '' ? $row['uploader'] : 'αρχικό post') ?></a>
-                    </p>
+    <div class="statbar">
+        <dl class="stats">
+            <?php foreach ($stats as [$label, $value, $ico]): ?>
+                <div>
+                    <span class="stat-icon"><?= icon($ico) ?></span>
+                    <dt><?= e($label) ?></dt>
+                    <dd><?= e($value) ?></dd>
+                </div>
+            <?php endforeach; ?>
+        </dl>
+        <div class="actions no-print">
+            <button type="button" class="btn" data-print><?= icon('printer') ?>Εκτύπωση</button>
+            <a class="btn primary" href="<?= e(url("recipe/{$row['id']}/pdf")) ?>"><?= icon('download') ?>Κατέβασμα PDF</a>
+        </div>
+    </div>
+
+    <div class="recipe-cols">
+        <?php if ($groups): ?>
+            <section class="ingredients">
+                <h2>Υλικά</h2>
+                <?php foreach ($groups as $group): ?>
+                    <?php if ($showTitles && trim((string) $group['title']) !== ''): ?>
+                        <h3><?= e($group['title']) ?></h3>
+                    <?php endif; ?>
+                    <ul class="ing-list">
+                        <?php foreach ($group['items'] as $item): ?>
+                            <?php $note = trim((string) ($item['note'] ?? '')); ?>
+                            <li>
+                                <label>
+                                    <input type="checkbox" class="no-print">
+                                    <span class="name"><?= e($item['name']) ?><?php if (($item['source'] ?? '') === 'εκτίμηση'): ?> <span class="star" title="Εκτίμηση">*</span><?php endif; ?><?php if ($note !== ''): ?><small><?= e($note) ?></small><?php endif; ?></span>
+                                    <span class="detail"><?= e(qty($item)) ?></span>
+                                </label>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endforeach; ?>
+                <?php if (has_estimates($recipe)): ?>
+                    <p class="legend"><span class="star">*</span> εκτίμηση: η ποσότητα δεν αναφέρθηκε στο βίντεο</p>
                 <?php endif; ?>
-            </aside>
+            </section>
         <?php endif; ?>
 
-        <div class="recipe-text">
-            <?php if ($groups): ?>
-                <section class="ingredients">
-                    <h2>Υλικά</h2>
-                    <div class="box">
-                        <?php foreach ($groups as $group): ?>
-                            <?php if ($showTitles && trim((string) $group['title']) !== ''): ?>
-                                <h3><?= e($group['title']) ?></h3>
+        <section class="method">
+            <h2>Εκτέλεση</h2>
+            <ol class="step-list">
+                <?php foreach ($steps as $n => $step): ?>
+                    <li>
+                        <span class="num"><?= $n + 1 ?></span>
+                        <div>
+                            <p><?= e($step) ?></p>
+                            <?php if (($t = step_time((string) $step)) !== ''): ?>
+                                <span class="time-chip"><?= icon('timer') ?><?= e($t) ?></span>
                             <?php endif; ?>
-                            <ul>
-                                <?php foreach ($group['items'] as $item): ?>
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" class="no-print">
-                                            <span class="qty"><?= e(qty($item) ?: '–') ?></span>
-                                            <span class="name"><?= e($item['name']) ?><?php if (trim((string) ($item['note'] ?? '')) !== ''): ?><span class="note">, <?= e($item['note']) ?></span><?php endif; ?><?php if (($item['source'] ?? '') === 'εκτίμηση'): ?> <span class="star" title="Εκτίμηση">*</span><?php endif; ?></span>
-                                        </label>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php if (has_estimates($recipe)): ?>
-                        <p class="legend"><span class="star">*</span> εκτίμηση: η ποσότητα δεν αναφέρθηκε στο βίντεο</p>
-                    <?php endif; ?>
-                </section>
-            <?php endif; ?>
-
-            <section class="steps">
-                <h2>Εκτέλεση</h2>
-                <ol>
-                    <?php foreach ($recipe['steps'] ?? [] as $step): ?>
-                        <li><?= e($step) ?></li>
-                    <?php endforeach; ?>
-                </ol>
-            </section>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
 
             <?php if (!empty($recipe['tips'])): ?>
-                <section class="tips">
-                    <h2>Συμβουλές</h2>
+                <div class="tips">
+                    <h3>Συμβουλές</h3>
                     <ul>
                         <?php foreach ($recipe['tips'] as $tip): ?><li><?= e($tip) ?></li><?php endforeach; ?>
                     </ul>
-                </section>
+                </div>
             <?php endif; ?>
 
             <?php if (!empty($recipe['uncertainties'])): ?>
-                <section class="notes">
+                <div class="notes">
                     <h3>Σημειώσεις</h3>
                     <ul>
                         <?php foreach ($recipe['uncertainties'] as $note): ?><li><?= e($note) ?></li><?php endforeach; ?>
                     </ul>
-                </section>
+                </div>
             <?php endif; ?>
-
-            <?php if (!$hasVideo && $row['source_url'] !== ''): ?>
-                <p class="source">Πηγή: <a href="<?= e($row['source_url']) ?>" target="_blank" rel="noopener noreferrer"><?= e($row['uploader'] !== '' ? $row['uploader'] : 'αρχικό post') ?></a></p>
-            <?php endif; ?>
-            <p class="print-only source"><?= e($row['source_url']) ?></p>
-        </div>
+        </section>
     </div>
 
-    <p class="back no-print"><a href="<?= e(url('')) ?>">← Όλες οι συνταγές</a></p>
+    <?php if ($hasVideo): ?>
+        <section class="video-section no-print">
+            <h2>Βίντεο</h2>
+            <video controls preload="metadata" playsinline
+                   <?= $poster !== '' ? 'poster="' . e($poster) . '"' : '' ?>
+                   src="<?= e(url("media/{$row['id']}/video")) ?>"></video>
+            <?php if ($row['source_url'] !== ''): ?>
+                <p class="source">Πηγή: <a href="<?= e($row['source_url']) ?>" target="_blank" rel="noopener noreferrer"><?= e($sourceName) ?></a></p>
+            <?php endif; ?>
+        </section>
+    <?php elseif ($row['source_url'] !== ''): ?>
+        <p class="source no-print">Πηγή: <a href="<?= e($row['source_url']) ?>" target="_blank" rel="noopener noreferrer"><?= e($sourceName) ?></a></p>
+    <?php endif; ?>
+    <p class="print-only source"><?= e($row['source_url']) ?></p>
+
+    <footer class="recipe-foot no-print">
+        <a href="<?= e(url('')) ?>">← Όλες οι συνταγές</a>
+        <?php if ($isAdmin): ?>
+            <form method="post" action="<?= e(url("admin/recipes/{$row['id']}/delete")) ?>"
+                  data-confirm="Να αφαιρεθεί οριστικά η συνταγή «<?= e($row['title']) ?>» μαζί με το βίντεό της;">
+                <?= csrf_field() ?>
+                <button type="submit" class="btn danger small"><?= icon('trash') ?>Αφαίρεση συνταγής</button>
+            </form>
+        <?php endif; ?>
+    </footer>
 </article>
