@@ -1,0 +1,8 @@
+# Python πακέτα για τα εξωτερικά εργαλεία της εφαρμογής (απομαγνητοφώνηση, λήψη, ffmpeg)
+faster-whisper>=1.1
+numpy>=1.26
+yt-dlp>=2026.1.0
+imageio-ffmpeg>=0.5
+# Προαιρετικά, για Whisper σε NVIDIA GPU:
+# nvidia-cublas-cu12
+# nvidia-cudnn-cu12==9.*

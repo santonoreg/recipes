@@ -1,0 +1,298 @@
+/* Συνταγές — ίδια παλέτα με το PDF: μελάνι, κρεμ, κεραμιδί */
+:root {
+    --ink: #2a2420;
+    --body: #3b3430;
+    --muted: #7d7167;
+    --accent: #b4532a;
+    --accent-dark: #933f1c;
+    --cream: #faf4ec;
+    --paper: #fffdf9;
+    --rule: #e8dccd;
+    --danger: #a32222;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --radius: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--body);
+    font: 17px/1.6 var(--sans);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    border-top: 4px solid var(--accent);
+}
+
+main { flex: 1; width: 100%; padding-top: 28px; padding-bottom: 56px; }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
+
+a { color: var(--accent-dark); }
+a:hover { color: var(--accent); }
+
+h1, h2, h3 { font-family: var(--serif); color: var(--ink); line-height: 1.2; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 .3em; }
+h2 { font-size: 1.5rem; margin: 2em 0 .7em; padding-bottom: .35em; border-bottom: 1px solid var(--rule); }
+
+.kicker {
+    margin: 0 0 6px;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.sr-only {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+}
+
+.print-only { display: none; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- κεφαλίδα / υποσέλιδο ---------- */
+.site-header { border-bottom: 1px solid var(--rule); background: var(--paper); }
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; }
+.brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 700 1.35rem var(--serif); color: var(--ink); text-decoration: none;
+}
+.brand-mark {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 0 4px var(--cream);
+}
+.site-nav { display: flex; align-items: center; gap: 18px; font-size: .95rem; }
+.site-nav form { margin: 0; }
+button.link {
+    background: none; border: 0; padding: 0; font: inherit; color: var(--accent-dark);
+    text-decoration: underline; cursor: pointer;
+}
+.site-footer { border-top: 1px solid var(--rule); color: var(--muted); font-size: .88rem; }
+.site-footer .wrap { display: flex; justify-content: space-between; padding-top: 18px; padding-bottom: 18px; }
+.site-footer a { color: var(--muted); }
+
+/* ---------- κουμπιά / φόρμες ---------- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px; padding: 8px 18px;
+    border: 1px solid var(--ink); border-radius: 999px;
+    background: transparent; color: var(--ink);
+    font: 600 .95rem var(--sans); text-decoration: none; cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); color: #fff; }
+.btn.danger { border-color: var(--danger); color: var(--danger); }
+.btn.danger:hover { background: var(--danger); color: #fff; }
+.btn.small { min-height: 36px; padding: 4px 14px; font-size: .85rem; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+label { display: block; font-weight: 600; font-size: .92rem; color: var(--ink); margin-bottom: 16px; }
+input[type="text"], input[type="url"], input[type="password"], input[type="search"], input[type="file"], textarea {
+    display: block; width: 100%; margin-top: 6px; padding: 11px 14px;
+    border: 1px solid #cdbfae; border-radius: var(--radius);
+    background: #fff; color: var(--ink); font: 400 1rem var(--sans);
+}
+textarea { resize: vertical; }
+input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+
+.hint { color: var(--muted); font-size: .92rem; }
+.alert {
+    padding: 12px 16px; border-radius: var(--radius); border-left: 4px solid var(--danger);
+    background: #fbeceb; color: #6d1515; font-size: .95rem;
+}
+.alert.soft { border-left-color: var(--accent); background: var(--cream); color: var(--body); }
+code { font-size: .9em; background: var(--cream); padding: 1px 5px; border-radius: 4px; }
+
+/* ---------- αρχική ---------- */
+.hero { padding: 20px 0 8px; }
+.search { max-width: 460px; margin-top: 14px; }
+.search input { border-radius: 999px; padding-left: 20px; }
+
+.grid {
+    list-style: none; margin: 24px 0 0; padding: 0;
+    display: grid; gap: 26px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+.card a { display: block; height: 100%; color: inherit; text-decoration: none; }
+.card-img {
+    position: relative; aspect-ratio: 4 / 5; overflow: hidden;
+    border-radius: var(--radius); background: var(--cream);
+}
+.card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s; }
+.card a:hover .card-img img { transform: scale(1.04); }
+.play {
+    position: absolute; right: 12px; bottom: 12px; width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(42, 36, 32, .78);
+}
+.play::after {
+    content: ""; position: absolute; left: 16px; top: 12px;
+    border-style: solid; border-width: 8px 0 8px 13px; border-color: transparent transparent transparent #fff;
+}
+.card-body { padding: 12px 2px 0; }
+.card-body h2 { font-size: 1.22rem; margin: 0 0 6px; padding: 0; border: 0; }
+.card a:hover h2 { color: var(--accent-dark); }
+.card-body p {
+    margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.5;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden;
+}
+.card-body .card-meta { margin-top: 8px; font-size: .8rem; font-weight: 600; color: var(--accent-dark); }
+
+.empty { text-align: center; padding: 60px 0; color: var(--muted); }
+.empty h1 { font-size: 2rem; }
+
+/* ---------- συνταγή ---------- */
+.recipe-head { max-width: 780px; padding-top: 16px; }
+.lead { font: italic 1.15rem/1.55 var(--serif); color: var(--muted); margin: 0; }
+.meta {
+    display: flex; flex-wrap: wrap; margin: 24px 0 0; padding: 0;
+    border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule);
+}
+.meta div { padding: 12px 22px 12px 0; margin-right: 22px; border-right: 1px solid var(--rule); }
+.meta div:last-child { border-right: 0; }
+.meta dt { font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.meta dd { margin: 2px 0 0; font: 700 1.1rem var(--serif); color: var(--ink); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.actions form { margin: 0 0 0 auto; }
+
+.recipe-body { margin-top: 12px; }
+.recipe.has-video .recipe-body {
+    display: grid; gap: 44px; align-items: start;
+    grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+}
+.recipe.has-video.landscape .recipe-body { display: block; }
+.recipe-video { position: sticky; top: 20px; margin-top: 2em; }
+.recipe.landscape .recipe-video { position: static; max-width: 860px; }
+.recipe-video video {
+    display: block; width: 100%; max-height: 78vh;
+    border-radius: var(--radius); background: #17130f;
+}
+.source { color: var(--muted); font-size: .88rem; margin: 10px 0 0; }
+.recipe-text { max-width: 720px; min-width: 0; }
+
+.box { background: var(--cream); border-radius: var(--radius); padding: 10px 20px; }
+.box h3 {
+    margin: 16px 0 2px; font: 700 .76rem var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--accent);
+}
+.box ul { list-style: none; margin: 0; padding: 0; }
+.box li { border-bottom: 1px solid var(--rule); }
+.box ul:last-child li:last-child { border-bottom: 0; }
+.box label {
+    display: grid; grid-template-columns: auto minmax(70px, 110px) 1fr; gap: 12px; align-items: baseline;
+    margin: 0; padding: 9px 0; font-weight: 400; font-size: 1rem; color: var(--body); cursor: pointer;
+}
+.box input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--accent); translate: 0 2px; }
+.qty { font-weight: 700; color: var(--ink); text-align: right; }
+.note { color: var(--muted); }
+.star { color: var(--accent); font-weight: 700; }
+.box li:has(input:checked) .name, .box li:has(input:checked) .qty { text-decoration: line-through; opacity: .5; }
+.legend { color: var(--muted); font-size: .85rem; margin: 8px 0 0; }
+
+.steps ol { list-style: none; counter-reset: step; margin: 0; padding: 0; }
+.steps li {
+    counter-increment: step; position: relative;
+    padding: 14px 0 14px 58px; border-bottom: 1px solid var(--rule); font-size: 1.05rem;
+}
+.steps li:last-child { border-bottom: 0; }
+.steps li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute; left: 0; top: 10px;
+    font: 700 1.6rem var(--serif); color: var(--accent);
+}
+
+.tips ul { list-style: none; margin: 0; padding: 4px 0 4px 18px; border-left: 3px solid var(--accent); }
+.tips li { padding: 4px 0; }
+.notes h3 { margin: 2.2em 0 .4em; font: 700 .76rem var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.notes ul { margin: 0; padding-left: 18px; color: var(--muted); font-style: italic; font-size: .93rem; }
+.back { margin-top: 44px; }
+
+/* ---------- σύνδεση ---------- */
+.auth { max-width: 420px; margin: 40px auto; }
+.auth h1 { font-size: 2rem; }
+.auth .btn { width: 100%; margin-top: 6px; }
+
+/* ---------- διαχείριση ---------- */
+.admin-head h1 { font-size: 2.2rem; }
+.panel { background: var(--cream); border-radius: var(--radius); padding: 22px; max-width: 760px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.tabs button {
+    min-height: 40px; padding: 6px 16px; border: 1px solid #cdbfae; border-radius: 999px;
+    background: transparent; color: var(--body); font: 600 .9rem var(--sans); cursor: pointer;
+}
+.tabs button[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.panel ol.hint { padding-left: 20px; margin-top: 0; }
+.capture { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+.submit-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+#job-message { font-size: .92rem; color: var(--muted); }
+#job-message.error { color: var(--danger); font-weight: 600; }
+progress { width: 100%; margin-top: 14px; accent-color: var(--accent); }
+
+.jobs, .admin-list { list-style: none; margin: 0; padding: 0; max-width: 760px; }
+.job { border: 1px solid var(--rule); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; }
+.job-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.job-source { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .92rem; }
+.badge {
+    display: inline-block; padding: 2px 10px; border-radius: 999px;
+    font-size: .76rem; font-weight: 700; background: var(--cream); color: var(--body);
+}
+.badge.running, .badge.queued { background: #fdf0c9; color: #6b4d00; }
+.badge.done { background: #dcefdc; color: #1d5a22; }
+.badge.error { background: #fbeceb; color: #8a1b1b; }
+.job pre {
+    margin: 10px 0 0; padding: 10px 12px; max-height: 190px; overflow: auto;
+    background: var(--cream); border-radius: 6px; font-size: .82rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word;
+}
+.count { font: 600 .9rem var(--sans); color: var(--muted); margin-left: 6px; }
+.admin-list li { display: flex; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+.admin-list .thumb { width: 56px; height: 56px; flex: none; border-radius: 8px; overflow: hidden; background: var(--cream); }
+.admin-list .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.admin-list .info { flex: 1; min-width: 0; }
+.admin-list .info a { font: 700 1.05rem var(--serif); color: var(--ink); text-decoration: none; }
+.admin-list .info a:hover { color: var(--accent-dark); text-decoration: underline; }
+.admin-list small { display: block; color: var(--muted); }
+.admin-list form { margin: 0; }
+
+/* ---------- μικρές οθόνες ---------- */
+@media (max-width: 820px) {
+    body { font-size: 16px; }
+    .recipe.has-video .recipe-body { display: block; }
+    .recipe-video { position: static; max-width: 420px; }
+    .recipe.landscape .recipe-video { max-width: none; }
+    .actions form { margin-left: 0; }
+    .meta div { padding-right: 14px; margin-right: 14px; }
+    .box { padding: 8px 14px; }
+    .box label { grid-template-columns: auto minmax(60px, 84px) 1fr; gap: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+}
+
+/* ---------- εκτύπωση ---------- */
+@media print {
+    @page { margin: 16mm; }
+    body { background: #fff; border-top: 0; font-size: 11.5pt; display: block; }
+    .site-header, .site-footer, .no-print { display: none !important; }
+    .print-only { display: block; }
+    main { padding: 0; }
+    .wrap { max-width: none; padding: 0; }
+    .recipe.has-video .recipe-body { display: block; }
+    .recipe-head, .recipe-text { max-width: none; }
+    h1 { font-size: 24pt; }
+    h2 { break-after: avoid; }
+    .box { background: #faf4ec; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .box label { grid-template-columns: minmax(70px, 110px) 1fr; padding: 5px 0; }
+    .box li, .steps li { break-inside: avoid; }
+    .steps li { padding-top: 9px; padding-bottom: 9px; }
+    a { color: inherit; text-decoration: none; }
+}

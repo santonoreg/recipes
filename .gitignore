@@ -1,0 +1,15 @@
+# μυστικά και δεδομένα
+.env
+cookies.txt
+/data/
+/output/
+
+# η παλιά εφαρμογή Python μένει μόνο τοπικά
+/old/
+
+# εξαρτήσεις και εργαλεία
+/vendor/
+__pycache__/
+*.pyc
+.idea/
+.claude/

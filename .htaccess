@@ -1,0 +1,7 @@
+# Αν ο web server δείχνει στον ριζικό φάκελο (και όχι στο public/), όλα προωθούνται στο public/.
+# Έτσι δεν είναι προσβάσιμα από τον browser τα .env, data/, src/ κ.λπ.
+Options -Indexes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
